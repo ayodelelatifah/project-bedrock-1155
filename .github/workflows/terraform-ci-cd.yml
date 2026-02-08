@@ -42,6 +42,15 @@ jobs:
         
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          TF_VAR_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_project_name: "project-bedrock"
+          TF_VAR_vpc_cidr: "10.0.0.0/16"
+          TF_VAR_public_subnets: '["10.0.1.0/24", "10.0.2.0/24"]'
+          TF_VAR_private_subnets: '["10.0.3.0/24", "10.0.4.0/24"]'
+          TF_VAR_assets_bucket_name: "bedrock-assets-1155"
+          TF_VAR_gorgeous_user_arn: ${{ secrets.GORGEOUS_USER_ARN }}
+          TF_VAR_common_tags: '{"Project" = "Bedrock", "Environment" = "Dev"}'
         run: terraform apply -auto-approve
 
       ##########################################################################
