@@ -1,0 +1,17 @@
+# Local terraform directories
+**/.terraform/*
+
+# .tfstate files (They live in S3 now!)
+*.tfstate
+*.tfstate.*
+
+# Crash logs and overrides
+crash.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
