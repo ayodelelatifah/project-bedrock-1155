@@ -72,6 +72,7 @@ resource "aws_eks_cluster" "main" {
   type              = "STANDARD"
 }
 */
+
 resource "aws_eks_access_policy_association" "admin_policy" {
   cluster_name  = aws_eks_cluster.main.name
   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
