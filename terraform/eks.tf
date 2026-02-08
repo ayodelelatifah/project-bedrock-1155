@@ -35,7 +35,7 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
 ################################################################################
 
 resource "aws_eks_cluster" "main" {
-  name     = "project-${lower(var.project_name)}-cluster"
+  name     = "${lower(var.project_name)}-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
   version  = var.cluster_version
 
