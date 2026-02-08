@@ -8,10 +8,9 @@ on:
 
 jobs:
   terraform:
-    name: "Terraform"
+    name: "Terraform & Deploy"
     runs-on: ubuntu-latest
     
-    # This tells GitHub to run all steps inside the terraform folder
     defaults:
       run:
         working-directory: ./terraform 
@@ -27,13 +26,15 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false # Recommended for easier output parsing
 
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Format Check
         run: terraform fmt -check
-        continue-on-error: true # Don't stop the build for formatting, but tell us if it's messy
+        continue-on-error: true 
 
       - name: Terraform Plan
         if: github.event_name == 'pull_request'
@@ -42,3 +43,20 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
+
+      ##########################################################################
+      # NEW: DEPLOYMENT STAGE
+      # This runs ONLY after a successful Apply on the main branch
+      ##########################################################################
+      - name: Deploy Application to EKS
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          # 1. Get credentials for the new cluster
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name $(terraform output -raw cluster_name)
+          
+          # 2. Move to scripts directory and set permissions
+          cd ../scripts
+          chmod +x deploy-retail-app.sh
+          
+          # 3. Execute the deployment
+          ./deploy-retail-app.sh
