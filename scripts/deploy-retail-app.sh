@@ -50,6 +50,7 @@ helm install ui oci://public.ecr.aws/aws-containers/retail-store-sample-ui-chart
   --set app.endpoints.carts=http://cart-carts:80 \
   --set app.endpoints.orders=http://orders:80 \
   --set app.endpoints.checkout=http://checkout:80 \
+  --set service.type=LoadBalancer \
   --wait
 
 echo "✅ Deployment complete!"
