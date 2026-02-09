@@ -1,5 +1,5 @@
 region       = "us-east-1"
-project_name = "Bedrock"
+project_name = "project-bedrock"
 
 # Networking
 vpc_cidr        = "10.0.0.0/16"
