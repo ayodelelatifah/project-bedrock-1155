@@ -51,7 +51,7 @@ jobs:
           TF_VAR_assets_bucket_name: "bedrock-assets-1155"
           TF_VAR_gorgeous_user_arn: ${{ secrets.GORGEOUS_USER_ARN }}
           TF_VAR_common_tags: '{"Project" = "Bedrock", "Environment" = "Dev"}'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -lock=false
 
       ##########################################################################
       # NEW: DEPLOYMENT STAGE

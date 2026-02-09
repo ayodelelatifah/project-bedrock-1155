@@ -136,10 +136,10 @@ resource "aws_eks_node_group" "main" {
   instance_types = ["t3.small"]
   version        = var.cluster_version
 
-  # Requirement: Autoscaling (2, 2, 2)
+  # Requirement: Autoscaling (3, 4, 2)
   scaling_config {
-    desired_size = 2
-    max_size     = 2
+    desired_size = 3
+    max_size     = 4
     min_size     = 2
   }
 
