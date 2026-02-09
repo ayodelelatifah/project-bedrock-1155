@@ -66,12 +66,12 @@ resource "aws_eks_cluster" "main" {
 # 3. CLUSTER ACCESS: Admin Rights for Gorgeous User
 ################################################################################
 
-/* resource "aws_eks_access_entry" "admin_user" {
+resource "aws_eks_access_entry" "admin_user" {
   cluster_name      = aws_eks_cluster.main.name
   principal_arn     = var.gorgeous_user_arn
   type              = "STANDARD"
 }
-*/
+
 
 resource "aws_eks_access_policy_association" "admin_policy" {
   cluster_name  = aws_eks_cluster.main.name
