@@ -4,11 +4,16 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6.31.0" # Or your current version
+      version = "~> 6.31.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = ">= 2.0"
+    }
+    # ADD THIS BLOCK
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.0"
     }
   }
 }
@@ -17,7 +22,9 @@ provider "aws" {
   region = var.region
 }
 
-# THIS IS THE BLOCK YOU JUST SHOWED ME - UPDATE IT HERE
+# ADD THIS BLOCK
+provider "archive" {}
+
 provider "kubernetes" {
   host                   = aws_eks_cluster.main.endpoint
   cluster_ca_certificate = base64decode(aws_eks_cluster.main.certificate_authority[0].data)
