@@ -2,13 +2,13 @@
 # VPC & NETWORKING - RECOVERY SHEET
 ################################################################################
 
-# 1. The VPC (Matching the "project-project" typo to prevent destruction)
+# 1. The VPC
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = merge(var.common_tags, { Name = "project-project-bedrock-vpc" })
+  tags = merge(var.common_tags, { Name = "project-bedrock-vpc" })
 }
 
 # 2. Internet Gateway
