@@ -1,20 +1,23 @@
-# 1. The VPC
+################################################################################
+# VPC & NETWORKING - RECOVERY SHEET
+################################################################################
+
+# 1. The VPC (Matching the "project-project" typo to prevent destruction)
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = merge(var.common_tags, { Name = "project-${lower(var.project_name)}-vpc" })
+  tags = merge(var.common_tags, { Name = "project-project-bedrock-vpc" })
 }
 
 # 2. Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
-
-  tags = merge(var.common_tags, { Name = "${var.project_name}-igw" })
+  tags   = merge(var.common_tags, { Name = "${var.project_name}-igw" })
 }
 
-# 3. Public Subnets (2)
+# 3. Public Subnets
 resource "aws_subnet" "public" {
   count                   = 2
   vpc_id                  = aws_vpc.main.id
@@ -23,12 +26,12 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = merge(var.common_tags, { 
-    Name                     = "${var.project_name}-public-${count.index}" 
+    Name                     = "project-bedrock-public-${count.index}" 
     "kubernetes.io/role/elb" = "1"
   })
 }
 
-# 4. Private Subnets (2)
+# 4. Private Subnets
 resource "aws_subnet" "private" {
   count             = 2
   vpc_id            = aws_vpc.main.id
@@ -36,7 +39,7 @@ resource "aws_subnet" "private" {
   availability_zone = "${var.region}${count.index == 0 ? "a" : "b"}"
 
   tags = merge(var.common_tags, { 
-    Name                              = "${var.project_name}-private-${count.index}" 
+    Name                              = "project-bedrock-private-${count.index}" 
     "kubernetes.io/role/internal-elb" = "1"
   })
 }
@@ -47,12 +50,11 @@ resource "aws_eip" "nat" {
   tags   = merge(var.common_tags, { Name = "${var.project_name}-nat-eip" })
 }
 
-# 6. NAT Gateway (placed in the first public subnet)
+# 6. NAT Gateway
 resource "aws_nat_gateway" "gw" {
   allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.public[0].id
-
-  tags = merge(var.common_tags, { Name = "${var.project_name}-nat-gw" })
+  tags          = merge(var.common_tags, { Name = "${var.project_name}-nat-gw" })
 }
 
 # 7. Route Tables

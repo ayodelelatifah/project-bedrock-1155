@@ -1,19 +1,6 @@
-# 1. KUBERNETES PROVIDER
-# This uses the EKS cluster details to authenticate Terraform to Kubernetes.
-provider "kubernetes" {
-  host                   = aws_eks_cluster.main.endpoint
-  cluster_ca_certificate = base64decode(aws_eks_cluster.main.certificate_authority[0].data)
-  
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", aws_eks_cluster.main.name]
-    command     = "aws"
-  }
-}
-
-# 2. KUBERNETES NAMESPACE
+# 11. KUBERNETES NAMESPACE
 # Creates the "retail-app" home for your microservices.
-resource "kubernetes_namespace" "retail_app" {
+resource "kubernetes_namespace_v1" "retail_app" {
   metadata {
     name = "retail-app"
   }
@@ -22,12 +9,12 @@ resource "kubernetes_namespace" "retail_app" {
   depends_on = [aws_eks_node_group.main]
 }
 
-# 3. KUBERNETES SECRET
+# 2. KUBERNETES SECRET
 # Injects the RDS hostnames and credentials into the "retail-app" namespace.
-resource "kubernetes_secret" "rds_credentials" {
+resource "kubernetes_secret_v1" "rds_credentials" {
   metadata {
     name      = "rds-db-credentials"
-    namespace = kubernetes_namespace.retail_app.metadata[0].name 
+    namespace = kubernetes_namespace_v1.retail_app.metadata[0].name 
   }
 
   # We use .address to get the DNS name (Host) without the :port suffix
@@ -41,5 +28,5 @@ resource "kubernetes_secret" "rds_credentials" {
   type = "Opaque"
 
   # Explicit dependency to ensure the namespace exists first
-  depends_on = [kubernetes_namespace.retail_app]
+  depends_on = [kubernetes_namespace_v1.retail_app]
 }

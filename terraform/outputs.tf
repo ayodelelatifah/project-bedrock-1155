@@ -7,6 +7,10 @@ output "cluster_name" {
   description = "Kubernetes Cluster Name"
   value       = aws_eks_cluster.main.name
 }
+output "region" {
+  description = "Region Name"
+  value       = var.region
+}
 
 output "vpc_id" {
   description = "The ID of the VPC"
@@ -39,4 +43,7 @@ output "orders_db_endpoint" {
 
 output "rds_security_group_id" {
   value = aws_security_group.rds_sg.id
+}
+output "assets_bucket_name" {
+  value = var.assets_bucket_name
 }
