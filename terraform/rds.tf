@@ -1,6 +1,7 @@
-# 1. DB SUBNET GROUP: Places RDS in your Private Subnets
+# 1. DB SUBNET GROUP: Fixed to prevent RDS destruction
 resource "aws_db_subnet_group" "database_subnets" {
-  name       = "${lower(var.project_name)}-db-subnet-group"
+  # Hardcode this name to match the existing one in AWS
+  name       = "project-bedrock-db-subnet-group"
   subnet_ids = aws_subnet.private[*].id
 
   tags = merge(var.common_tags, { Name = "Main DB Subnet Group" })
