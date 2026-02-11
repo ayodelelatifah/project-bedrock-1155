@@ -12,26 +12,30 @@ echo "🚀 Starting deployment with RDS Integration..."
 # 1. Ensure the namespace exists
 kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
-# 2. Install Catalog Service (Connecting to your MySQL RDS)
+# 2. Install Catalog Service (MySQL RDS)
 echo "📦 Installing Catalog Service linked to RDS..."
 helm upgrade --install catalog oci://public.ecr.aws/aws-containers/retail-store-sample-catalog-chart:1.4.0 \
   --namespace $NAMESPACE \
   --set mysql.create=false \
   --set app.persistence.provider=mysql \
   --set app.database.endpoint=$CATALOG_ENDPOINT \
+  --set app.database.user=admin \
+  --set app.database.name=catalog \
   --wait
 
-# 3. Install Orders Service (Connecting to your PostgreSQL RDS)
+# 3. Install Orders Service (PostgreSQL RDS)
 echo "📦 Installing Orders Service linked to RDS..."
 helm upgrade --install orders oci://public.ecr.aws/aws-containers/retail-store-sample-orders-chart:1.4.0 \
   --namespace $NAMESPACE \
   --set postgresql.create=false \
   --set app.persistence.provider=postgresql \
   --set app.database.endpoint=$ORDERS_ENDPOINT \
+  --set app.database.user=admin \
+  --set app.database.name=orders \
   --set rabbitmq.create=true \
   --set app.messaging.provider=rabbitmq \
   --wait
-
+  
 # 4. Install Cart Service
 echo "📦 Installing Cart Service..."
 helm upgrade --install cart oci://public.ecr.aws/aws-containers/retail-store-sample-cart-chart:1.4.0 \
