@@ -24,12 +24,7 @@
     "type": "string",
     "value": "AKIATK6FRTMFFDPUMKML"
   },
-  "dev_secret_access_key": {
-    "sensitive": true,
-    "type": "string",
-    "value": "IikV9nrRM2BIVeTLv+aHquoYiojZ8TLB7fH5XNqz"
-  },
-  "orders_db_endpoint": {
+    "orders_db_endpoint": {
     "sensitive": false,
     "type": "string",
     "value": "terraform-20260209000752821600000005.cwnesg4c8s23.us-east-1.rds.amazonaws.com:5432"
