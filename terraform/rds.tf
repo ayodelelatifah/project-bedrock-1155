@@ -1,6 +1,7 @@
-# 1. DB SUBNET GROUP: Places RDS in your Private Subnets
+# 1. DB SUBNET GROUP: Fixed to prevent RDS destruction
 resource "aws_db_subnet_group" "database_subnets" {
-  name       = "${lower(var.project_name)}-db-subnet-group"
+  # Hardcode this name to match the existing one in AWS
+  name       = "project-bedrock-db-subnet-group"
   subnet_ids = aws_subnet.private[*].id
 
   tags = merge(var.common_tags, { Name = "Main DB Subnet Group" })
@@ -47,7 +48,7 @@ resource "aws_db_instance" "catalog_db" {
   engine                 = "mysql"
   engine_version         = "8.0"
   instance_class         = "db.t3.micro" 
-  username               = "admin"
+  username               = "dbmaster"
   password               = "password123" 
   db_subnet_group_name   = aws_db_subnet_group.database_subnets.name
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
@@ -64,7 +65,7 @@ resource "aws_db_instance" "orders_db" {
   engine                 = "postgres"
   engine_version         = "15"
   instance_class         = "db.t3.micro"
-  username               = "admin"
+  username               = "dbmaster"
   password               = "password123"
   db_subnet_group_name   = aws_db_subnet_group.database_subnets.name
   vpc_security_group_ids = [aws_security_group.rds_sg.id]

@@ -27,7 +27,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_wrapper: false # Recommended for easier output parsing
+          terraform_wrapper: false 
 
       - name: Terraform Init
         run: terraform init
@@ -42,21 +42,34 @@ jobs:
         
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+        env:
+          TF_VAR_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_project_name: "project-bedrock"
+          TF_VAR_vpc_cidr: "10.0.0.0/16"
+          TF_VAR_public_subnets: '["10.0.1.0/24", "10.0.2.0/24"]'
+          TF_VAR_private_subnets: '["10.0.3.0/24", "10.0.4.0/24"]'
+          TF_VAR_assets_bucket_name: "bedrock-assets-1155"
+          TF_VAR_gorgeous_user_arn: ${{ secrets.GORGEOUS_USER_ARN }}
+          # UPDATED: Mandatory Capstone 2025 Tags
+          TF_VAR_common_tags: '{"Project" = "capstone-barakat-2025", "Owner" = "Barakat", "Version" = "1.31"}'
+        run: terraform apply -auto-approve -lock=false
 
       ##########################################################################
-      # NEW: DEPLOYMENT STAGE
-      # This runs ONLY after a successful Apply on the main branch
+      # DEPLOYMENT STAGE: Resolves "RDS Not Utilized" issue
       ##########################################################################
       - name: Deploy Application to EKS
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          # 1. Get credentials for the new cluster
+          # 1. Get credentials for the cluster
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name $(terraform output -raw cluster_name)
           
-          # 2. Move to scripts directory and set permissions
+          # 2. Extract RDS Endpoints to link App and Database
+          export CATALOG_DB_ENDPOINT=$(terraform output -raw catalog_db_endpoint)
+          export ORDERS_DB_ENDPOINT=$(terraform output -raw orders_db_endpoint)
+          
+          # 3. Move to scripts directory
           cd ../scripts
           chmod +x deploy-retail-app.sh
           
-          # 3. Execute the deployment
-          ./deploy-retail-app.sh
+          # 4. Deploy with RDS endpoints passed as arguments
+          ./deploy-retail-app.sh "$CATALOG_DB_ENDPOINT" "$ORDERS_DB_ENDPOINT"

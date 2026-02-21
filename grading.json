@@ -1,0 +1,42 @@
+{
+  "catalog_db_endpoint": {
+    "sensitive": false,
+    "type": "string",
+    "value": "terraform-20260209000752821300000004.cwnesg4c8s23.us-east-1.rds.amazonaws.com:3306"
+  },
+  "cluster_endpoint": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://8F13EE6076F537368CA3F585255E682F.gr7.us-east-1.eks.amazonaws.com"
+  },
+  "cluster_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "project-bedrock-cluster"
+  },
+  "configure_kubectl": {
+    "sensitive": false,
+    "type": "string",
+    "value": "aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster"
+  },
+  "dev_access_key_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "AKIATK6FRTMFFDPUMKML"
+  },
+    "orders_db_endpoint": {
+    "sensitive": false,
+    "type": "string",
+    "value": "terraform-20260209000752821600000005.cwnesg4c8s23.us-east-1.rds.amazonaws.com:5432"
+  },
+  "rds_security_group_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-0704185facf0ccf82"
+  },
+  "vpc_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "vpc-0250d4faa3278555c"
+  }
+}

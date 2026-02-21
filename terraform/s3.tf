@@ -23,3 +23,8 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 
   depends_on = [aws_lambda_permission.allow_s3]
 }
+
+resource "aws_iam_user_policy_attachment" "gorgeous_s3_access" {
+  user       = "gorgeous" # Or the name of the user from the ARN
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}

@@ -6,6 +6,7 @@ variable "region" {
 variable "project_name" {
   description = "Name of the project for naming resources"
   type        = string
+  default     = "project-bedrock"
 }
 
 variable "vpc_cidr" {
@@ -24,10 +25,14 @@ variable "private_subnets" {
 }
 
 variable "common_tags" {
-  description = "Common tags to apply to all resources"
+  description = "Required capstone metadata"
   type        = map(string)
+  default     = {
+    Project = "capstone-barakat-2025"
+    Owner   = "Barakat"
+    Version = "1.31"
 }
-
+}
 variable "assets_bucket_name" {
   description = "Name of the S3 bucket for assets and state"
   type        = string
